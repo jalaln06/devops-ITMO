@@ -5,18 +5,17 @@ FROM  alpine:latest as build
 ARG VERSION=1.23.2
 
 # Install build tools, libraries and utilities 
-RUN apk add --no-cache --virtual .build-deps                                        \
-    build-base                                                                  \   
+RUN apk add --no-cache --virtual .build-deps                                    \
+    build-base                                                                  \
     gnupg                                                                       \
     pcre-dev                                                                    \
     wget                                                                        \
     zlib-dev                                                                    
 
 
-
 # Retrieve, verify and unpack Nginx source - key server pgp.mit.edu  
-RUN set -x                                                                      &&  \
-    cd /tmp                                                                     &&  \
+RUN set -x                                                                  &&  \
+    cd /tmp                                                                 &&  \
     wget -q http://nginx.org/download/nginx-1.23.2.tar.gz                   &&  \
     wget -q http://nginx.org/download/nginx-1.23.2.tar.gz.asc               &&  \
     tar -xf nginx-1.23.2.tar.gz                                             &&  \
@@ -25,16 +24,16 @@ RUN set -x                                                                      
 WORKDIR /tmp/nginx-1.23.2
 
 # Build and install nginx
-RUN ./configure                                                                     \
+RUN ./configure                                                                 \
     --with-ld-opt="-static"                                                     \
-    --with-http_sub_module                                                    \
-    --without-http_gzip_module                                                &&   \
-    make install                                                                &&  \
+    --with-http_sub_module                                                      \
+    --without-http_gzip_module                                              &&  \
+    make install                                                            &&  \
     strip /usr/local/nginx/sbin/nginx
 
 # Symlink access and error logs to /dev/stdout and /dev/stderr, in 
 # order to make use of Docker's logging mechanism
-RUN ln -sf /dev/stdout /usr/local/nginx/logs/access.log                         &&  \
+RUN ln -sf /dev/stdout /usr/local/nginx/logs/access.log                     &&  \
     ln -sf /dev/stderr /usr/local/nginx/logs/error.log
 
 FROM scratch 
