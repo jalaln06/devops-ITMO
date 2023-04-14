@@ -13,9 +13,24 @@ services:
 
     volumes:
       - type: volume
-        source: lab2vol
+        source: lab2volume
         target: /data
-
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+  certbot:
+    image: certbot/certbot
+    container_name: letsencrypt
+    restart: always
+    command: certonly --webroot -w /var/www/certbot -d www.examplecom -d examplecom --non-interactive --agree-tos -m jalal0601@gmail.com
+    depends_on:
+      - lab2
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+      - ./certbot/www:/var/www/certbot/:ro
 volumes:
-  lab2vol:
-    external: true
+  lab2volume:
+
+networks:
+  letsencrypt:
+
