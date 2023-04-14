@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  lab2:
+    image: lab2
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      lab2vol:
+        external: true
+
+volumes:
+  lab2vol
