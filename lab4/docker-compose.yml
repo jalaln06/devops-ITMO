@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  lab4:
+    image: lab4
+    ports:
+      - 80:80
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    volumes:
+      - type: volume
+        source: lab4volume
+        target: /data
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
+  certbot:
+    image: certbot/certbot
+    container_name: letsencrypt
+    restart: always
+    command: certonly --webroot -w /var/www/certbot -d www.examplecom -d examplecom --non-interactive --agree-tos -m jalal0601@gmail.com
+    depends_on:
+      - lab4
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
+volumes:
+  lab4volume:
+
+networks:
+  letsencrypt:
+
