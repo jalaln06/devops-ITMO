@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  lab5:
+    image: cache/lab5:latest
+    ports:
+      - 80:80
+    build:
+      context: ../docker-gs-ping-
+      dockerfile: docker-gs-ping/Dockerfile
+      cache_from:
+        - cache/lab5:latest
+    restart: always
+    volumes:
+      - type: volume
+        source: lab5volume
+        target: /data
+
+volumes:
+  lab5volume:
